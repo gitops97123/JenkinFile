@@ -2,19 +2,19 @@ pipeline {
     agent any
 
     stages {
+        stage('build') {
+            steps {
+                 sh 'docker build -t rocky-linux .'
+            }
+        }
         stage('test') {
             steps {
-                 sh 'kubectl apply -f /var/lib/jenkins/pod.yaml --dry-run=client'
+                 sh 'docker container run -itd rocky-linux'
             }
         }
-        stage('deploy') {
+        stage('check') {
             steps {
-                 sh 'kubectl apply -f /var/lib/jenkins/pod.yaml'
-            }
-        }
-        stage('destroy') {
-            steps {
-                 sh 'kubectl delete -f /var/lib/jenkins/pod.yaml'
+                 sh 'docker container ls'
             }
         }
     }
